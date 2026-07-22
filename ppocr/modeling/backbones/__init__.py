@@ -23,11 +23,13 @@ def build_backbone(config, model_type):
         from .det_resnet_vd_sast import ResNet_SAST
         from .det_pp_lcnet import PPLCNet
         from .rec_lcnetv3 import PPLCNetV3
+        from .rec_lcnetv4 import PPLCNetV4
         from .rec_hgnet import PPHGNet_small
         from .rec_vit import ViT
         from .det_pp_lcnet_v2 import PPLCNetV2_base
         from .rec_repvit import RepSVTR_det
         from .rec_vary_vit import Vary_VIT_B
+        from .rec_pphgnetv2 import PPHGNetV2_B4
 
         support_dict = [
             "MobileNetV3",
@@ -36,10 +38,12 @@ def build_backbone(config, model_type):
             "ResNet_SAST",
             "PPLCNet",
             "PPLCNetV3",
+            "PPLCNetV4",
             "PPHGNet_small",
             "PPLCNetV2_base",
             "RepSVTR_det",
             "Vary_VIT_B",
+            "PPHGNetV2_B4",
         ]
         if model_type == "table":
             from .table_master_resnet import TableResNetExtra
@@ -66,12 +70,17 @@ def build_backbone(config, model_type):
         from .rec_donut_swin import DonutSwinModel
         from .rec_shallow_cnn import ShallowCNN
         from .rec_lcnetv3 import PPLCNetV3
+        from .rec_lcnetv4 import PPLCNetV4
         from .rec_hgnet import PPHGNet_small
         from .rec_vit_parseq import ViTParseQ
         from .rec_repvit import RepSVTR
         from .rec_svtrv2 import SVTRv2
         from .rec_vary_vit import Vary_VIT_B, Vary_VIT_B_Formula
-        from .rec_pphgnetv2 import PPHGNetV2_B4
+        from .rec_pphgnetv2 import (
+            PPHGNetV2_B4,
+            PPHGNetV2_B4_Formula,
+            PPHGNetV2_B6_Formula,
+        )
 
         support_dict = [
             "MobileNetV1Enhance",
@@ -91,6 +100,7 @@ def build_backbone(config, model_type):
             "DenseNet",
             "ShallowCNN",
             "PPLCNetV3",
+            "PPLCNetV4",
             "PPHGNet_small",
             "ViTParseQ",
             "ViT",
@@ -101,6 +111,8 @@ def build_backbone(config, model_type):
             "DonutSwinModel",
             "Vary_VIT_B",
             "PPHGNetV2_B4",
+            "PPHGNetV2_B4_Formula",
+            "PPHGNetV2_B6_Formula",
             "Vary_VIT_B_Formula",
         ]
     elif model_type == "e2e":

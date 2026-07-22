@@ -65,7 +65,6 @@ class Dilation(A.ImageOnlyTransform):
 
 
 class Bitmap(A.ImageOnlyTransform):
-
     def __init__(self, value=0, lower=200, always_apply=False, p=0.5):
         super().__init__(always_apply=always_apply, p=p)
         self.lower = lower
@@ -110,7 +109,7 @@ def plasma_fractal(mapsize=256, wibbledecay=3, rng=None):
     'mapsize' must be a power of two.
     """
     assert mapsize & (mapsize - 1) == 0
-    maparray = np.empty((mapsize, mapsize), dtype=np.float_)
+    maparray = np.empty((mapsize, mapsize), dtype=np.float64)
     maparray[0, 0] = 0
     stepsize = mapsize
     wibble = 100
@@ -414,6 +413,13 @@ class Shadow(A.ImageOnlyTransform):
 class UniMERNetTrainTransform:
     def __init__(self, bitmap_prob=0.04, **kwargs):
         self.bitmap_prob = bitmap_prob
+        if tuple(map(int, A.__version__.split("."))) >= (2, 0, 0):
+            new_val = (0, (10 / 255) ** 0.5)
+            GaussNoise = A.GaussNoise(new_val, p=0.2)
+            ImageCompression = A.ImageCompression(quality_range=(95, 100), p=0.3)
+        else:
+            GaussNoise = A.GaussNoise(10, p=0.2)
+            ImageCompression = A.ImageCompression(95, p=0.3)
         self.train_transform = A.Compose(
             [
                 A.Compose(
@@ -441,9 +447,9 @@ class UniMERNetTrainTransform:
                     p=0.15,
                 ),
                 A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.3),
-                A.GaussNoise(10, p=0.2),
+                GaussNoise,
                 A.RandomBrightnessContrast(0.05, (-0.2, 0), True, p=0.2),
-                A.ImageCompression(95, p=0.3),
+                ImageCompression,
                 A.ToGray(always_apply=True),
                 A.Normalize((0.7931, 0.7931, 0.7931), (0.1738, 0.1738, 0.1738)),
             ]
@@ -489,7 +495,14 @@ class GoTImgDecode:
         data = (data - min_val) / (max_val - min_val) * 255
         gray = 255 * (data < 200).astype(np.uint8)
         coords = cv2.findNonZero(gray)  # Find all non-zero points (text)
+        if coords is None:
+            return img
         a, b, w, h = cv2.boundingRect(coords)  # Find minimum spanning bounding box
+        if w == 0 or h == 0:
+            return img
+        # Avoid extreme aspect ratios that cause errors in downstream processing
+        if max(w, h) / min(w, h) > 200:
+            return img
         return img.crop((a, b, w + a, h + b))
 
     def get_dimensions(self, img):
@@ -566,9 +579,18 @@ class GoTImgDecode:
 
 
 class UniMERNetImgDecode:
-    def __init__(self, input_size, random_padding=False, **kwargs):
+    def __init__(
+        self,
+        input_size,
+        random_padding=False,
+        random_resize=False,
+        random_crop=False,
+        **kwargs,
+    ):
         self.input_size = input_size
-        self.random_padding = random_padding
+        self.is_random_padding = random_padding
+        self.is_random_resize = random_resize
+        self.is_random_crop = random_crop
 
     def crop_margin(self, img):
         data = np.array(img.convert("L"))
@@ -580,7 +602,14 @@ class UniMERNetImgDecode:
         data = (data - min_val) / (max_val - min_val) * 255
         gray = 255 * (data < 200).astype(np.uint8)
         coords = cv2.findNonZero(gray)  # Find all non-zero points (text)
+        if coords is None:
+            return img
         a, b, w, h = cv2.boundingRect(coords)  # Find minimum spanning bounding box
+        if w == 0 or h == 0:
+            return img
+        # Avoid extreme aspect ratios that cause errors in downstream processing
+        if max(w, h) / min(w, h) > 200:
+            return img
         return img.crop((a, b, w + a, h + b))
 
     def get_dimensions(self, img):
@@ -626,11 +655,44 @@ class UniMERNetImgDecode:
         img = img.resize(tuple(output_size[::-1]), resample=2)
         return img
 
+    def random_resize(self, img):
+        scale = np.random.uniform(0.5, 1)
+        img = img.resize([int(scale * s) for s in img.size])
+        return img
+
+    def random_crop(self, img, crop_ratio):
+        width, height = img.width, img.height
+        max_crop_pixel = min(width, height) * crop_ratio
+        crop_left = np.random.uniform(0, max_crop_pixel)
+        crop_right = np.random.uniform(0, max_crop_pixel)
+        crop_top = np.random.uniform(0, max_crop_pixel)
+        crop_bottom = np.random.uniform(0, max_crop_pixel)
+        # 计算裁剪后的边界
+        left = crop_left
+        top = crop_top
+        right = width - crop_right
+        bottom = height - crop_bottom
+        # 裁剪图像
+        img = img.crop((left, top, right, bottom))
+
+        return img
+
     def __call__(self, data):
         filename = data["filename"]
         img = Image.open(filename)
         try:
+            if self.is_random_resize:
+                img = self.random_resize(img)
             img = self.crop_margin(img.convert("RGB"))
+            if "label" in data and self.is_random_crop:
+                label = data["label"]
+                equation_length = len(label)
+                if equation_length < 256:
+                    img = self.random_crop(img, crop_ratio=0.1)
+                elif 256 < equation_length <= 512:
+                    img = self.random_crop(img, crop_ratio=0.05)
+                else:
+                    img = self.random_crop(img, crop_ratio=0.03)
         except OSError:
             return
         if img.height == 0 or img.width == 0:
@@ -639,7 +701,7 @@ class UniMERNetImgDecode:
         img.thumbnail((self.input_size[1], self.input_size[0]))
         delta_width = self.input_size[1] - img.width
         delta_height = self.input_size[0] - img.height
-        if self.random_padding:
+        if self.is_random_padding:
             pad_width = np.random.randint(low=0, high=delta_width + 1)
             pad_height = np.random.randint(low=0, high=delta_height + 1)
         else:
@@ -672,7 +734,14 @@ class UniMERNetResize:
         gray = 255 * (data < 200).astype(np.uint8)
 
         coords = cv2.findNonZero(gray)  # Find all non-zero points (text)
+        if coords is None:
+            return img
         a, b, w, h = cv2.boundingRect(coords)  # Find minimum spanning bounding box
+        if w == 0 or h == 0:
+            return img
+        # Avoid extreme aspect ratios that cause errors in downstream processing
+        if max(w, h) / min(w, h) > 200:
+            return img
         return img.crop((a, b, w + a, h + b))
 
     def get_dimensions(self, img):

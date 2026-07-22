@@ -20,6 +20,7 @@ import errno
 import os
 import pickle
 import json
+from packaging import version
 
 import paddle
 
@@ -31,7 +32,7 @@ try:
 
     encrypted = encryption.is_encryption_needed()
 except ImportError:
-    get_logger().warning("Skipping import of the encryption module.")
+    print("Skipping import of the encryption module.")
     encrypted = False  # Encryption is not needed if the module cannot be imported
 
 __all__ = ["load_model"]
@@ -62,7 +63,7 @@ def _mkdir_if_not_exist(path, logger):
                 raise OSError("Failed to mkdir {}".format(path))
 
 
-def load_model(config, model, optimizer=None, model_type="det"):
+def load_model(config, model, optimizer=None, model_type="det", ema=None):
     """
     load model from checkpoint or pretrained_model
     """
@@ -160,6 +161,33 @@ def load_model(config, model, optimizer=None, model_type="det"):
             if "epoch" in states_dict:
                 best_model_dict["start_epoch"] = states_dict["epoch"] + 1
         logger.info("resume from {}".format(checkpoints))
+
+        # Restore EMA state if available
+        if ema is not None:
+            pdema_path = checkpoints + ".pdema"
+            if os.path.exists(pdema_path):
+                ema_data = paddle.load(pdema_path)
+                # .pdparams contains EMA weights; restore original training weights
+                if "train_state" in ema_data:
+                    train_sd = ema_data["train_state"]
+                    cur_sd = model.state_dict()
+                    for k in cur_sd:
+                        if k in train_sd:
+                            if list(cur_sd[k].shape) == list(train_sd[k].shape):
+                                cur_sd[k] = train_sd[k]
+                    model.set_state_dict(cur_sd)
+                    logger.info(
+                        "EMA: restored training weights from {}".format(pdema_path)
+                    )
+                # Restore EMA shadow weights + step
+                if "ema_state" in ema_data and "step" in ema_data:
+                    ema.set_state_dict(ema_data)
+                    logger.info(
+                        "EMA: restored shadow weights (step={}) from {}".format(
+                            ema_data["step"], pdema_path
+                        )
+                    )
+
     elif pretrained_model:
         is_float16 = load_pretrained_params(model, pretrained_model)
     else:
@@ -218,6 +246,8 @@ def save_model(
     config,
     is_best=False,
     prefix="ppocr",
+    ema=None,
+    train_state=None,
     **kwargs,
 ):
     """
@@ -243,10 +273,30 @@ def save_model(
         paddle.save(model.state_dict(), model_prefix + ".pdparams")
         metric_prefix = model_prefix
 
+        # Save EMA state for training resumption
+        if ema is not None and train_state is not None:
+            paddle.save(
+                {
+                    "train_state": train_state,
+                    "ema_state": ema.state_dict,
+                    "step": ema.step,
+                },
+                model_prefix + ".pdema",
+            )
+
         if prefix == "best_accuracy":
             paddle.save(
                 model.state_dict(), os.path.join(best_model_path, "model.pdparams")
             )
+            if ema is not None and train_state is not None:
+                paddle.save(
+                    {
+                        "train_state": train_state,
+                        "ema_state": ema.state_dict,
+                        "step": ema.step,
+                    },
+                    os.path.join(best_model_path, "model.pdema"),
+                )
 
     else:  # for kie system, we follow the save/load rules in NLP
         if config["Global"]["distributed"]:
@@ -288,7 +338,8 @@ def update_train_results(config, prefix, metric_info, done_flag=False, last_num=
         config["Global"]["save_model_dir"], "train_result.json"
     )
     save_model_tag = ["pdparams", "pdopt", "pdstates"]
-    if FLAGS_json_format_model:
+    paddle_version = version.parse(paddle.__version__)
+    if FLAGS_json_format_model or paddle_version >= version.parse("3.0.0"):
         save_inference_files = {
             "inference_config": "inference.yml",
             "pdmodel": "inference.json",
@@ -306,7 +357,7 @@ def update_train_results(config, prefix, metric_info, done_flag=False, last_num=
             train_results = json.load(fp)
     else:
         train_results = {}
-        train_results["model_name"] = config["Global"]["pdx_model_name"]
+        train_results["model_name"] = config["Global"]["model_name"]
         label_dict_path = config["Global"].get("character_dict_path", "")
         if label_dict_path != "":
             label_dict_path = os.path.abspath(label_dict_path)

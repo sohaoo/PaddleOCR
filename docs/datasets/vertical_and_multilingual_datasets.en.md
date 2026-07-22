@@ -7,10 +7,10 @@ comments: true
 
 Here we have sorted out the commonly used vertical multi-language OCR dataset datasets, which are being updated continuously. We welcome you to contribute datasets ～
 
-- [Chinese urban license plate dataset](#Chinese urban license plate dataset)
-- [Bank credit card dataset](#Bank credit card dataset)
-- [Captcha dataset-Captcha](#Captcha dataset-Captcha)
-- [multi-language dataset](#multi-language dataset)
+- [Chinese urban license plate dataset](#chinese-urban-license-plate-dataset)
+- [Bank credit card dataset](#bank-credit-card-dataset)
+- [Captcha dataset-Captcha](#captcha-dataset-captcha)
+- [multi-language dataset](#multi-language-datasetmulti-lingual-scene-text-detection-and-recognition)
 
 ## Chinese urban license plate dataset
 
@@ -36,7 +36,7 @@ Here we have sorted out the commonly used vertical multi-language OCR dataset da
 
 ## Bank credit card dataset
 
-- **Data source**: [source](https://www.kesci.com/home/dataset/5954cf1372ead054a5e25870)
+- **Data source**: [source](https://www.heywhale.com/mw/dataset/5954cf1372ead054a5e25870)
 
 - **Data introduction**: There are three types of training data
     - 1.Sample card data of China Merchants Bank: including card image data and annotation data, a total of 618 pictures

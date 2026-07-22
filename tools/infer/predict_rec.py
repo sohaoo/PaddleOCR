@@ -38,6 +38,36 @@ logger = get_logger()
 
 class TextRecognizer(object):
     def __init__(self, args, logger=None):
+        if os.path.exists(f"{args.rec_model_dir}/inference.yml"):
+            model_config = utility.load_config(f"{args.rec_model_dir}/inference.yml")
+            model_name = model_config.get("Global", {}).get("model_name", "")
+            if model_name and model_name not in [
+                "PP-OCRv5_mobile_rec",
+                "PP-OCRv5_server_rec",
+                "korean_PP-OCRv5_mobile_rec",
+                "eslav_PP-OCRv5_mobile_rec",
+                "latin_PP-OCRv5_mobile_rec",
+                "en_PP-OCRv5_mobile_rec",
+                "th_PP-OCRv5_mobile_rec",
+                "el_PP-OCRv5_mobile_rec",
+                "PP-OCRv6_tiny_rec",
+                "PP-OCRv6_small_rec",
+                "PP-OCRv6_medium_rec",
+            ]:
+                raise ValueError(
+                    f"{model_name} is not supported. Please check if the model is supported by the PaddleOCR wheel."
+                )
+
+            if args.rec_char_dict_path == "./ppocr/utils/ppocr_keys_v1.txt":
+                rec_char_list = model_config.get("PostProcess", {}).get(
+                    "character_dict", []
+                )
+                if rec_char_list:
+                    new_rec_char_dict_path = f"{args.rec_model_dir}/ppocr_keys.txt"
+                    with open(new_rec_char_dict_path, "w", encoding="utf-8") as f:
+                        f.writelines([char + "\n" for char in rec_char_list])
+                    args.rec_char_dict_path = new_rec_char_dict_path
+
         if logger is None:
             logger = get_logger()
         self.rec_image_shape = [int(v) for v in args.rec_image_shape.split(",")]
@@ -379,12 +409,23 @@ class TextRecognizer(object):
 
     def resize_norm_img_svtr(self, img, image_shape):
         imgC, imgH, imgW = image_shape
-        resized_image = cv2.resize(img, (imgW, imgH), interpolation=cv2.INTER_LINEAR)
+        max_wh_ratio = imgW * 1.0 / imgH
+        h, w = img.shape[0], img.shape[1]
+        ratio = w * 1.0 / h
+        max_wh_ratio = min(max(max_wh_ratio, ratio), max_wh_ratio)
+        imgW = int(imgH * max_wh_ratio)
+        if math.ceil(imgH * ratio) > imgW:
+            resized_w = imgW
+        else:
+            resized_w = int(math.ceil(imgH * ratio))
+        resized_image = cv2.resize(img, (resized_w, imgH))
         resized_image = resized_image.astype("float32")
         resized_image = resized_image.transpose((2, 0, 1)) / 255
         resized_image -= 0.5
         resized_image /= 0.5
-        return resized_image
+        padding_im = np.zeros((imgC, imgH, imgW), dtype=np.float32)
+        padding_im[:, :, 0:resized_w] = resized_image
+        return padding_im
 
     def resize_norm_img_cppd_padding(
         self, img, image_shape, padding=True, interpolation=cv2.INTER_LINEAR

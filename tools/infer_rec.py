@@ -40,7 +40,15 @@ import tools.program as program
 
 def main():
     global_config = config["Global"]
-
+    if config["Architecture"].get("algorithm") in [
+        "UniMERNet",
+        "PP-FormulaNet-S",
+        "PP-FormulaNet-L",
+        "PP-FormulaNet_plus-S",
+        "PP-FormulaNet_plus-M",
+        "PP-FormulaNet_plus-L",
+    ]:
+        config["PostProcess"]["is_infer"] = True
     # build post process
     post_process_class = build_post_process(config["PostProcess"], global_config)
 
@@ -112,7 +120,7 @@ def main():
             elif config["Architecture"]["algorithm"] == "SAR":
                 op[op_name]["keep_keys"] = ["image", "valid_ratio"]
             elif config["Architecture"]["algorithm"] == "RobustScanner":
-                op[op_name]["keep_keys"] = ["image", "valid_ratio", "word_positons"]
+                op[op_name]["keep_keys"] = ["image", "valid_ratio", "word_positions"]
             else:
                 op[op_name]["keep_keys"] = ["image"]
         transforms.append(op)
@@ -138,6 +146,9 @@ def main():
                     "UniMERNet",
                     "PP-FormulaNet-S",
                     "PP-FormulaNet-L",
+                    "PP-FormulaNet_plus-S",
+                    "PP-FormulaNet_plus-M",
+                    "PP-FormulaNet_plus-L",
                 ]:
                     data = {"image": img, "filename": file}
                 else:
@@ -160,10 +171,10 @@ def main():
                 img_metas = [paddle.to_tensor(valid_ratio)]
             if config["Architecture"]["algorithm"] == "RobustScanner":
                 valid_ratio = np.expand_dims(batch[1], axis=0)
-                word_positons = np.expand_dims(batch[2], axis=0)
+                word_positions = np.expand_dims(batch[2], axis=0)
                 img_metas = [
                     paddle.to_tensor(valid_ratio),
-                    paddle.to_tensor(word_positons),
+                    paddle.to_tensor(word_positions),
                 ]
             if config["Architecture"]["algorithm"] == "CAN":
                 image_mask = paddle.ones(
@@ -201,6 +212,9 @@ def main():
                 "UniMERNet",
                 "PP-FormulaNet-S",
                 "PP-FormulaNet-L",
+                "PP-FormulaNet_plus-S",
+                "PP-FormulaNet_plus-M",
+                "PP-FormulaNet_plus-L",
             ]:
                 info = str(post_result[0])
             else:

@@ -6,118 +6,112 @@ hide:
 ---
 
 <div align="center">
- <img src="https://github.com/PaddlePaddle/PaddleOCR/releases/download/v2.9.1/PaddleOCR_log.png" align="middle" width = "600"/>
-  <p align="center">
-      <a href="https://discord.gg/z9xaRVjdbD"><img src="https://img.shields.io/badge/Chat-on%20discord-7289da.svg?sanitize=true" alt="Chat"></a>
-      <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-dfd.svg"></a>
-      <a href="https://github.com/PaddlePaddle/PaddleOCR/releases"><img src="https://img.shields.io/github/v/release/PaddlePaddle/PaddleOCR?color=ffa"></a>
-      <a href=""><img src="https://img.shields.io/badge/python-3.7+-aff.svg"></a>
-      <a href=""><img src="https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-pink.svg"></a>
-      <a href="https://pypi.org/project/PaddleOCR/"><img src="https://img.shields.io/pypi/dm/PaddleOCR?color=9cf"></a>
-      <a href="https://github.com/PaddlePaddle/PaddleOCR/stargazers"><img src="https://img.shields.io/github/stars/PaddlePaddle/PaddleOCR?color=ccf"></a>
+  <p>
+    <a href="https://paddlepaddle.github.io/PaddleOCR/latest/index.html" target="_blank">
+      <img width="100%" src="./images/Banner_cn.png" alt="PaddleOCR Banner"></a>
   </p>
 </div>
 
-## 简介
 
-PaddleOCR 旨在打造一套丰富、领先、且实用的 OCR 工具库，助力开发者训练出更好的模型，并应用落地。
+PaddleOCR自发布以来凭借学术前沿算法和产业落地实践，受到了产学研各方的喜爱，并被广泛应用于众多知名开源项目，例如：Umi-OCR、OmniParser、MinerU、RAGFlow等，已成为广大开发者心中的开源OCR领域的首选工具。2025年5月20日，飞桨团队发布**PaddleOCR 3.0**，全面适配[飞桨框架3.0](https://github.com/PaddlePaddle/Paddle)正式版，进一步**提升文字识别精度**，支持**多文字类型识别**和**手写体识别**，满足大模型应用对**复杂文档高精度解析**的旺盛需求，结合**文心大模型4.5**显著提升关键信息抽取精度，并新增**对昆仑芯、昇腾等国产硬件**的支持。
 
-## 🚀 社区
+2026 年 1 月 29 日，PaddleOCR 开源了先进、高效的文档解析模型 PaddleOCR-VL-1.5。PaddleOCR-VL-1.5 是 PaddleOCR-VL 系列的全新迭代版本。在全面优化 1.0 版本核心能力的基础上，该模型在文档解析权威评测集 OmniDocBench v1.5 上斩获了 94.5% 的高精度，超越了全球的顶尖通用大模型及文档解析专用模型。PaddleOCR-VL-1.5 创新性地支持了文档元素的异形框定位，使得 PaddleOCR-VL-1.5 在扫描、倾斜、弯折、屏幕拍摄及复杂光照等真实落地场景中均表现卓越，实现了全面的 SOTA。此外，模型进一步集成了印章识别与文本检测识别任务，关键指标持续领跑主流模型。
 
-PaddleOCR 由 [PMC](https://github.com/PaddlePaddle/PaddleOCR/issues/12122) 监督。Issues 和 PRs 将在尽力的基础上进行审查。欲了解 PaddlePaddle 社区的完整概况，请访问 [community](https://github.com/PaddlePaddle/community)。
+**2026 年 5 月 28 日，PaddleOCR 开源了 PaddleOCR-VL-1.6，作为 PaddleOCR-VL 系列的最新版本。** PaddleOCR-VL-1.6 以 96.3% 精度再次刷新评测集 OmniDocBench v1.6，并在 OmniDocBench v1.5、Real5-OmniDocBench 上同步达到全新 SOTA，文本、公式、表格识别全面领先开源与闭源方案。此外，模型在古籍、生僻字识别上大幅提升，印章、spotting、图表识别等多场景能力也显著增强。PaddleOCR-VL-1.6 在 PaddleOCR-VL-1.5 的基础上进一步升级了 VLM 组件（PaddleOCR-VL-1.6-0.9B），并继续采用 PP-DocLayoutV3 作为版面分析模型；模型结构与 PaddleOCR-VL-1.5 完全一致，支持零成本无缝迁移。
 
-⚠️注意：[Issues](https://github.com/PaddlePaddle/PaddleOCR/issues)模块仅用来报告程序🐞Bug，其余提问请移步[Discussions](https://github.com/PaddlePaddle/PaddleOCR/discussions)模块提问。如所提Issue不是Bug，会被移到Discussions模块，敬请谅解。
+**2026 年 6 月 11 日，PaddleOCR 发布 PP-OCRv6，作为 PP-OCR 系列的最新版本。** PP-OCRv6 基于全新设计的 PPLCNetV4 统一骨干网络，提供 tiny/small/medium 三档模型（1.5M~34.5M 参数）。在精度方面，medium 档相比 PP-OCRv5_server 识别精度提升 5.1%、检测精度提升 4.6%，以仅 34.5M 参数的规模超越 Qwen3-VL-235B、GPT-5.5 等大型视觉语言模型。在多语种方面，单一模型统一支持中文、英文、日文及 46 种拉丁语系共 50 种语言，无需为不同语种切换模型。在场景覆盖方面，PP-OCRv6 大幅提升了数码管、点阵字符、轮胎印字、工业字符等传统 VLM 难以覆盖的专业场景识别能力。在速度方面，PP-OCRv6_medium 在 Intel Xeon CPU OpenVINO 下相比 PP-OCRv5_server 加速 5.2×（1.40s vs 7.30s），tiny 档在纯前端浏览器环境的极低算力下，直接轰出了单图 97ms 的惊人成绩。
 
-## 📣 近期更新
+您可以在 [PaddleOCR官网](https://www.paddleocr.com) 在线使用或者调用该模型的API。
 
-- **🔥🔥2025.3.7 PaddleOCR 2.10 版本，主要包含如下内容**：
+**PaddleOCR 3.x 核心特色能力：**
 
-  - **重磅新增 OCR 领域 12 个自研单模型：**
-    - **[版面区域检测](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/layout_detection.html)** 系列 3 个模型：PP-DocLayout-L、PP-DocLayout-M、PP-DocLayout-S，支持预测 23 个常见版面类别，中英论文、研报、试卷、书籍、杂志、合同、报纸等丰富类型的文档实现高质量版面检测，**mAP@0.5 最高达 90.4%，轻量模型端到端每秒处理超百页文档图像。**
-    - **[公式识别](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/formula_recognition.html)** 系列 2 个模型：PP-FormulaNet-L、PP-FormulaNet-S，支持 5 万种 LaTeX 常见词汇，支持识别高难度印刷公式和手写公式，其中 **PP-FormulaNet-L 较开源同等量级模型精度高 6 个百分点，PP-FormulaNet-S 较同等精度模型速度快 16 倍。**
-    - **[表格结构识别](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/table_structure_recognition.html)** 系列 2 个模型：SLANeXt_wired、SLANeXt_wireless。飞桨自研新一代表格结构识别模型，分别支持有线表格和无线表格的结构预测。相比于SLANet_plus，SLANeXt在表格结构方面有较大提升，**在内部高难度表格识别评测集上精度高 6 个百分点。**
-    - **[表格分类](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/table_classification.html)** 系列 1 个模型：PP-LCNet_x1_0_table_cls，超轻量级有线表格和无线表格的分类模型。
-    - **[表格单元格检测](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/table_cells_detection.html)** 系列 2 个模型：RT-DETR-L_wired_table_cell_det、RT-DETR-L_wireless_table_cell_det，分别支持有线表格和无线表格的单元格检测，可配合SLANeXt_wired、SLANeXt_wireless、文本检测、文本识别模块完成对表格的端到端预测。（参见本次新增的表格识别v2产线）
-    - **[文本识别](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/text_recognition.html)** 系列 1 个模型： PP-OCRv4_server_rec_doc，**支持1.5万+字典，文字识别范围更广，与此同时提升了部分文字的识别精准度，在内部数据集上，精度较 PP-OCRv4_server_rec 高 3 个百分点以上。**
-    - **[文本行方向分类](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/ocr_modules/text_recognition.html)** 系列 1 个模型：PP-LCNet_x0_25_textline_ori，**存储只有 0.3M** 的超轻量级文本行方向分类模型。
 
-   - **重磅推出 4 条高价值多模型组合方案：** 
-     - **[文档图像预处理产线](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html)**：通过超轻量级模型组合使用，实现对文档图像的扭曲和方向的矫正。
-     - **[版面解析v2产线](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.html)**：组合多个自研的不同类型的 OCR 类模型，优化复杂版面阅读顺序，实现多种复杂 PDF 文件端到端转换 Markdown 文件和 JSON 文件。在多个文档场景下，转换效果较其他开源方案更好。可以为大模型训练和应用提供高质量的数据生产能力。
-     - **[表格识别v2产线](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html)**：**提供更好的表格端到端识别能力。** 通过将表格分类模块、表格单元格检测模块、表格结构识别模块、文本检测模块、文本识别模块等组合使用，实现对多种样式的表格预测，用户可自定义微调其中任意模块以提升垂类表格的效果。
-     - **[PP-ChatOCRv4-doc产线](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html)**：在 PP-ChatOCRv3-doc 的基础上，**融合了多模态大模型，优化了 Prompt 和多模型组合后处理逻辑，更好地解决了版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题，准确率较 PP-ChatOCRv3-doc 高 15 个百分点。其中，大模型升级了本地部署的能力，提供了标准的 OpenAI 调用接口，支持对本地大模型如 DeepSeek-R1 部署的调用。**
+- **PaddleOCR-VL - 通过 0.9B 超紧凑视觉语言模型增强多语种文档解析**  
+  **面向文档解析的 SOTA 且资源高效的模型**, 支持 109 种语言，在复杂元素（如文本、表格、公式和图表）识别方面表现出色，同时资源消耗极低。
 
-- **🔥2024.10.1 添加OCR领域低代码全流程开发能力**:
-    - 飞桨低代码开发工具PaddleX，依托于PaddleOCR的先进技术，支持了OCR领域的低代码全流程开发能力：
-        - 🎨 [**模型丰富一键调用**](https://paddlepaddle.github.io/PaddleOCR/latest/paddlex/quick_start.html)：将文本图像智能分析、通用OCR、通用版面解析、通用表格识别、公式识别、印章文本识别涉及的**17个模型**整合为6条模型产线，通过极简的**Python API一键调用**，快速体验模型效果。此外，同一套API，也支持图像分类、目标检测、图像分割、时序预测等共计**200+模型**，形成20+单功能模块，方便开发者进行**模型组合**使用。
-        - 🚀[**提高效率降低门槛**](https://paddlepaddle.github.io/PaddleOCR/latest/paddlex/overview.html)：提供基于**统一命令**和**图形界面**两种方式，实现模型简洁高效的使用、组合与定制。支持**高性能推理、服务化部署和端侧部署**等多种部署方式。此外，对于各种主流硬件如**英伟达GPU、昆仑芯、昇腾、寒武纪和海光**等，进行模型开发时，都可以**无缝切换**。
+- **PP-OCRv6 — 全场景多语言文字识别**
+  **单模型支持 50 种语言**（中、英、日及 46 种拉丁语系），检测精度提升 **4.6%**、识别精度提升 **5.1%**，超越主流视觉语言大模型。medium 档位模型端到端 CPU 推理加速 5.2×，覆盖数码屏/点阵/工业字符等专业场景。三档模型（tiny/small/medium，1.5M~34.5M 参数）满足端侧到服务端全场景部署。
 
-    - 支持文档场景信息抽取v3[PP-ChatOCRv3-doc](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta1/docs/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)、基于RT-DETR的[高精度版面区域检测模型](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta1/docs/module_usage/tutorials/ocr_modules/layout_detection.md)和PicoDet的[高效率版面区域检测模型](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta1/docs/module_usage/tutorials/ocr_modules/layout_detection.md)、高精度表格结构识别模型[SLANet_Plus](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta1/docs/module_usage/tutorials/ocr_modules/table_structure_recognition.md)、文本图像矫正模型[UVDoc](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta1/docs/module_usage/tutorials/ocr_modules/text_image_unwarping.md)、公式识别模型[LatexOCR](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta1/docs/module_usage/tutorials/ocr_modules/formula_recognition.md)、基于PP-LCNet的[文档图像方向分类模型](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta1/docs/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md)
+- **PP-StructureV3 — 复杂文档解析**  
+  将复杂PDF和文档图像智能转换为保留**原始结构的Markdown文件和JSON**文件，在公开评测中**领先**众多商业方案。**完美保持文档版式和层次结构**。
 
-- **🔥2024.7 添加 PaddleOCR 算法模型挑战赛冠军方案**：
-    - 赛题一：OCR 端到端识别任务冠军方案——[场景文本识别算法-SVTRv2](https://paddlepaddle.github.io/PaddleOCR/latest/algorithm/text_recognition/algorithm_rec_svtrv2.html)；
-    - 赛题二：通用表格识别任务冠军方案——[表格识别算法-SLANet-LCNetV2](https://paddlepaddle.github.io/PaddleOCR/latest/algorithm/table_recognition/algorithm_table_slanet.html)。
+- **PP-ChatOCRv4 — 智能信息抽取**  
+  原生集成ERNIE 4.5，从海量文档中**精准提取关键信息**，精度较上一代提升15个百分点。让文档"**听懂**"您的问题并给出准确答案。
 
-> [更多](./update.md)
+> 💡 Tips
+> 
+> PaddleOCR 官网免费 API 调用现已将每日文档解析上限提升至 20,000 页，支持大批量 PDF 文件解析，同时提供 MCP 及 Skills 服务。更多详情请参见 [PaddleOCR 官网](https://www.paddleocr.com)。
 
-## 🌟 特性
+PaddleOCR 3.0 除了提供优秀的模型库外，还提供覆盖模型训练、推理和服务化部署等环节的易用工具，方便开发者快速落地 AI 应用。
 
-支持多种 OCR 相关前沿算法，在此基础上打造产业级特色模型PP-OCR、PP-Structure和PP-ChatOCR，并打通数据生产、模型训练、压缩、预测部署全流程。
+**此外，PaddleOCR 还提供官方 [Agent Skills](./version3.x/integrations/skills.md)，便于在支持 Skills 的 AI 应用中调用文字识别、文档解析等能力。**
 
-<img src="./images/ppocrv4.png" width="600" />
+<div align="center">
+  <p>
+    <a href="https://paddlepaddle.github.io/PaddleOCR/latest/index.html" target="_blank">
+      <img width="100%" src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/paddleocr/README/Arch_cn.jpg" alt="PaddleOCR Architecture"></a>
+  </p>
+</div>
 
-## 效果展示
+您可直接[快速开始](./quick_start.md)，或查阅完整的 [PaddleOCR 文档](https://paddlepaddle.github.io/PaddleOCR/main/index.html)，或通过 [Github Issues](https://github.com/PaddlePaddle/PaddleOCR/issues) 获取支持，或在 [AIStudio 课程平台](https://aistudio.baidu.com/course/introduce/25207) 探索我们的 OCR 课程。
 
-### 超轻量PP-OCRv3效果展示
+**特别说明**：PaddleOCR 3.x 引入了多项重要的接口变动，**基于 PaddleOCR 2.x 编写的旧代码很可能无法使用 PaddleOCR 3.x 运行**。请确保您阅读的文档与实际使用的 PaddleOCR 版本匹配。[此文档](./update/upgrade_notes.md) 阐述了升级原因及 PaddleOCR 2.x 到 PaddleOCR 3.x 的主要变更。
 
-#### PP-OCRv3中文模型
+## 🔄 快速一览运行效果
 
-![img](./images/test_add_91.jpg)
+### PP-OCRv5
 
-<img src="./images/00006737.jpg" width="600" />
+<div align="center">
+  <p>
+       <img width="100%" src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/paddleocr/README/PP-OCRv5_demo.gif" alt="PP-OCRv5 Demo">
+  </p>
+</div>
 
-<img src="./images/PP-OCRv3-pic001.jpg" width="600" />
 
-<img src="./images/PP-OCRv3-pic002.jpg" width="600" />
 
-<img src="./images/PP-OCRv3-pic003.jpg" width="600" />
+### PP-StructureV3
 
-#### PP-OCRv3英文数字模型
+<div align="center">
+  <p>
+      <img width="100%" src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/paddleocr/README/PP-StructureV3_demo.gif" alt="PP-StructureV3 Demo">
+  </p>
+</div>
 
-<img src="./images/en_1.png" width="600" />
+### PaddleOCR-VL
 
-<img src="./images/en_2.png" width="600" />
+<div align="center">
+  <p>
+      <img width="100%" src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/paddleocr/README/PaddleOCR-VL_demo.gif" alt="PP-StructureV3 Demo">
+  </p>
+</div>
 
-<img src="./images/en_3-0398013.png" width="600" />
 
-#### PP-OCRv3多语言模型
+## 👩‍👩‍👧‍👦 PaddleOCR OCEAN 生态联盟
 
-<img src="./images/japan_2.jpg" width="600" />
+单点技术的领先只是开始，生态的繁荣才是长期价值所在。为了让 OCR 及文档智能技术更好地服务于全球开发者和产业场景，我们正式发起 PaddleOCR OCEAN 生态联盟。
 
-<img src="./images/korean_1.jpg" width="600" />
+联盟名称 OCEAN 蕴含五大核心：
 
-#### PP-Structure 文档分析
+  * **O**pen Source – 开源为本   
+  * **C**ommunity – 社区驱动
+  * **E**cosystem – 生态共赢
+  * **A**pplication – 应用落地
+  * **N**etwork – 网络互联
 
-- 版面分析+表格识别
+**定位**：以开源共建为核心的生态联盟，面向全球OCR及文档智能上下游伙伴，不涉及商业排他、不干预伙伴独立商业选择，聚焦技术共建、社区联动与影响力互换。以开放、共生、共赢为核心理念，汇聚开发者、平台方、应用方，共同推动 OCR 技术的全链条应用与生态繁荣。联盟致力于实现生态全链条应用规模与衍生项目数量的双重提升，让全球开发者与用户共享 OCR 技术发展的红利。
 
-  <img src="./images/ppstructure-20240708082235651.gif" width="600" />
+**加入我们：与志同道合者，共赴深水区**
 
-- SER（语义实体识别）
+PaddleOCR OCEAN生态联盟面向全球OCR及文档智能上下游伙伴开放。我们深知：**生态的价值不在于数量，而在于质量**。
+我们期待这样的伙伴加入：
 
-  <img src="./images/185310636-6ce02f7c-790d-479f-b163-ea97a5a04808-20240708082238739.jpg" width="600" />
+  * **真心认同开源精神**，愿意以开放的心态共建、共享
+  * **具备持续贡献的意愿与能力**，无论是代码、场景案例还是平台集成
+  * **愿意与联盟共同成长**，不追求短期流量，而是深耕长期价值
 
-  <img src="./images/185539517-ccf2372a-f026-4a7c-ad28-c741c770f60a-20240708082247529.png" width="600" />
+**联盟不是荣誉墙，而是行动者的集结号。**
 
-  <img src="./images/197464552-69de557f-edff-4c7f-acbf-069df1ba097f-20240708082253634.png" width="600" />
+我们将对每一份申请进行审慎评估，优先邀请那些已经在PaddleOCR生态中有所行动、或具备明确共建规划的伙伴。我们不追求“大而全”，而是希望与真正志同道合的机构和个人，在OCR深水区携手深耕。
+如果您符合以上理念，欢迎通过以下方式与我们联系：
 
-- RE（关系提取）
-
-  <img src="./images/185393805-c67ff571-cf7e-4217-a4b0-8b396c4f22bb-20240708082310650.jpg" width="600" />
-
-  <img src="./images/185540080-0431e006-9235-4b6d-b63d-0b3c6e1de48f-20240708082316558.jpg" width="600" />
-
-  <img src="./images/186094813-3a8e16cc-42e5-4982-b9f4-0134dfb5688d-20240708082323916.png" width="600" />
-
-## 许可证书
-
-本项目的发布受<a href="https://github.com/PaddlePaddle/PaddleOCR/blob/master/LICENSE">Apache 2.0 license</a>许可认证。
+  * 发送邮件至 [paddleocr@baidu.com](mailto:paddleocr@baidu.com)，简要介绍您与PaddleOCR的合作情况或共建计划

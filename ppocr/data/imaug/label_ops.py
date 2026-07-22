@@ -70,6 +70,10 @@ class DetLabelEncode(object):
         boxes = np.array(boxes, dtype=np.float32)
         txt_tags = np.array(txt_tags, dtype=np.bool_)
 
+        # Mark polygons with NaN coordinates as ignore to avoid downstream errors
+        nan_mask = np.isnan(boxes).any(axis=(1, 2))
+        txt_tags[nan_mask] = True
+
         data["polys"] = boxes
         data["texts"] = txts
         data["ignore_tags"] = txt_tags
@@ -1781,6 +1785,10 @@ class LatexOCRLabelEncode(object):
         rec_char_dict_path,
         **kwargs,
     ):
+        # Set the TOKENIZERS_PARALLELISM environment variable to 'false' to suppress
+        # the warning: "The current process just got forked, Disabling parallelism to avoid deadlocks..
+        #  To disable this warning, please explicitly set TOKENIZERS_PARALLELISM=(true | false)" from tokenizers
+        os.environ["TOKENIZERS_PARALLELISM"] = "false"
         from tokenizers import Tokenizer as TokenizerFast
 
         self.tokenizer = TokenizerFast.from_file(rec_char_dict_path)
@@ -1934,6 +1942,10 @@ class UniMERNetLabelEncode(object):
         max_seq_len,
         **kwargs,
     ):
+        # Set the TOKENIZERS_PARALLELISM environment variable to 'false' to suppress
+        # the warning: "The current process just got forked, Disabling parallelism to avoid deadlocks..
+        #  To disable this warning, please explicitly set TOKENIZERS_PARALLELISM=(true | false)" from tokenizers
+        os.environ["TOKENIZERS_PARALLELISM"] = "false"
         from tokenizers import Tokenizer as TokenizerFast
         from tokenizers import AddedToken
 
